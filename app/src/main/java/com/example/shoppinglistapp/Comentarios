@@ -1,0 +1,25 @@
+**COISAS QUE FALTAM NO PROJETO**
+1- Tela Principal (Lista de Compras):
+    Listagem de listas de compras
+    Botão para adicionar nova lista de compras
+
+2- Tela de Edição/Criação de Lista de Compras (RF003):
+    Campo para título da lista
+    Seleção de imagem (opcional)
+
+3- Tela de Itens da Lista (RF004):
+    Listagem de itens da lista de compras
+    Botão para adicionar novo item
+
+4- Tela de Adição/Edição de Itens (RF004):
+    Campos para nome, quantidade, unidade, categoria
+
+5 - Requisitos Nao Funcionais
+    Deve haver tratamento para que não haja perda de dados com mudanças de configurações do dispositivo (por exemplo, rotação de tela).
+    Deve-se utilizar o recurso de vinculação de visualizações (ViewBinding).
+    O aplicativo deverá ser capaz de manipular dados de forma dinâmica. Assim sendo, na funcionalidade de Criar Lista, por exemplo, os dados precisarão ser armazenados em memória.
+
+
+**CORREÇÕES**
+1- Corrigir tela de registro
+    Quando clica no botao de registro, o app é fechado

@@ -29,11 +29,6 @@ class RegisterActivity : AppCompatActivity() {
             if (nameInput.isEmpty() || emailInput.isEmpty() || passwordInput.isEmpty() || confirmPasswordInput.isEmpty()) {
                 Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
-            } else {
-                Toast.makeText(this, "Registrado com sucesso!", Toast.LENGTH_SHORT).show()
-
-                val intent = Intent(this, LoginActivity::class.java)
-                startActivity(intent)
             }
 
             if (passwordInput != confirmPasswordInput) {
@@ -41,6 +36,13 @@ class RegisterActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            // Se tudo estiver correto, você pode prosseguir com o registro
+            Toast.makeText(this, "Registrado com sucesso!", Toast.LENGTH_SHORT).show()
+
+            // Inicie LoginActivity após o registro
+            val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
+            startActivity(intent)
         }
+
     }
 }
