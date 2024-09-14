@@ -4,7 +4,7 @@
 
 2- Tela de Edição/Criação de Lista de Compras (RF003):
     Campo para título da lista
-    Seleção de imagem (opcional)
+    Seleção de imagem
 
 3- Tela de Itens da Lista (RF004):
     Listagem de itens da lista de compras
@@ -12,6 +12,8 @@
 
 4- Tela de Adição/Edição de Itens (RF004):
     Campos para nome, quantidade, unidade, categoria
+
+BONUS - PRECISA TER UM BOTAO PARA LOGOUT
 
 5 - Requisitos Nao Funcionais
     Deve haver tratamento para que não haja perda de dados com mudanças de configurações do dispositivo (por exemplo, rotação de tela).
