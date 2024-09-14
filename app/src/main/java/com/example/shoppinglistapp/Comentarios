@@ -1,7 +1,6 @@
 **COISAS QUE FALTAM NO PROJETO**
 1- Tela Principal (Lista de Compras):
     Listagem de listas de compras
-    Botão para adicionar nova lista de compras
 
 2- Tela de Edição/Criação de Lista de Compras (RF003):
     Campo para título da lista
@@ -19,7 +18,3 @@
     Deve-se utilizar o recurso de vinculação de visualizações (ViewBinding).
     O aplicativo deverá ser capaz de manipular dados de forma dinâmica. Assim sendo, na funcionalidade de Criar Lista, por exemplo, os dados precisarão ser armazenados em memória.
 
-
-**CORREÇÕES**
-1- Corrigir tela de registro
-    Quando clica no botao de registro, o app é fechado

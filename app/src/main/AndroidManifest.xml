@@ -12,19 +12,29 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ShoppingListApp"
         tools:targetApi="31">
+
+        <!-- Tela de Login como tela inicial -->
         <activity
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Tela de Registro de Usuário -->
         <activity
             android:name=".RegisterActivity"
             android:exported="true">
         </activity>
+
+        <!-- Tela Principal (Home) com a lista de compras -->
+        <activity
+            android:name=".HomeActivity"
+            android:exported="true">
+        </activity>
+
     </application>
 
 </manifest>

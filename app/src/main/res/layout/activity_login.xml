@@ -35,13 +35,15 @@
             android:id="@+id/btn_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/green"
             android:text="Login" />
 
         <Button
             android:id="@+id/btn_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Novo Usuário?" />
+            android:backgroundTint="@color/green"
+            android:text="Registar" />
 
     </LinearLayout>
 

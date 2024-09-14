@@ -1,12 +1,13 @@
 package com.example.shoppinglistapp
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -26,23 +27,32 @@ class RegisterActivity : AppCompatActivity() {
             val passwordInput = password.text.toString()
             val confirmPasswordInput = confirmPassword.text.toString()
 
+            // Verificação se todos os campos estão preenchidos
             if (nameInput.isEmpty() || emailInput.isEmpty() || passwordInput.isEmpty() || confirmPasswordInput.isEmpty()) {
                 Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
+            // Verificação se a senha e a confirmação de senha são iguais
             if (passwordInput != confirmPasswordInput) {
-                Toast.makeText(this, "Senhas não conferem", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Senhas não coincidem", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // Se tudo estiver correto, você pode prosseguir com o registro
-            Toast.makeText(this, "Registrado com sucesso!", Toast.LENGTH_SHORT).show()
+            // Salvando os dados do usuário no SharedPreferences
+            val sharedPreferences = getSharedPreferences("USER_DATA", Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            editor.putString("USER_EMAIL", emailInput)
+            editor.putString("USER_PASSWORD", passwordInput)
+            editor.apply()
 
-            // Inicie LoginActivity após o registro
+            // Exibir mensagem de sucesso
+            Toast.makeText(this, "Usuário registrado com sucesso!", Toast.LENGTH_SHORT).show()
+
+            // Navega para a tela de Login após o registro
             val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
             startActivity(intent)
+            finish() // Fecha a tela de registro
         }
-
     }
 }
