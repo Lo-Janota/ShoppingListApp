@@ -13,7 +13,6 @@
 4- Tela de Adição/Edição de Itens (RF004):
     Campos para nome, quantidade, unidade, categoria
 
-BONUS - PRECISA TER UM BOTAO PARA LOGOUT
 
 5 - Requisitos Nao Funcionais
     Deve haver tratamento para que não haja perda de dados com mudanças de configurações do dispositivo (por exemplo, rotação de tela).

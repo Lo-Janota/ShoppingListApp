@@ -5,43 +5,54 @@
     android:layout_height="match_parent">
 
     <!-- Botão flutuante para sair do app -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_logout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="324dp"
-        android:layout_marginTop="45dp"
-        android:src="@drawable/ic_logout"
-        android:contentDescription="Sair"
-        app:backgroundTint="@color/green"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="324dp"
+            android:layout_marginTop="30dp"
+            android:src="@drawable/ic_logout"
+            android:contentDescription="Sair"
+            app:backgroundTint="@color/green"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-    <TextView
-        android:id="@+id/text_my_lists"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="MINHAS LISTAS"
-        android:textAlignment="center"
-        android:textColor="@color/black"
-        android:textSize="24sp"
-        app:layout_constraintTop_toTopOf="@id/fab_add_list"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        android:layout_marginTop="16dp"/>
+        <TextView
+            android:id="@+id/text_my_lists"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MINHAS LISTAS"
+            android:layout_marginEnd="65dp"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            app:layout_constraintTop_toTopOf="@id/fab_add_list"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            android:layout_marginTop="16dp"/>
 
-    <!-- Botão flutuante para adicionar uma nova lista -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_add_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="45dp"
-        android:src="@drawable/ic_add"
-        android:contentDescription="Adicionar lista de compras"
-        app:backgroundTint="@color/green"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="80dp"
+            android:layout_marginTop="30dp"
+            android:src="@drawable/ic_search"
+            android:contentDescription="Pesquisar"
+            app:backgroundTint="@color/green"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_add_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="30dp"
+            android:src="@drawable/ic_add"
+            android:contentDescription="Adicionar lista de compras"
+            app:backgroundTint="@color/green"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
