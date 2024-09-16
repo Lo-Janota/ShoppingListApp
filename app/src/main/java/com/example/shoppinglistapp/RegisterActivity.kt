@@ -1,5 +1,6 @@
 package com.example.shoppinglistapp
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -11,6 +12,7 @@ import androidx.core.content.ContextCompat
 
 class RegisterActivity : AppCompatActivity() {
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
@@ -20,6 +22,7 @@ class RegisterActivity : AppCompatActivity() {
         val password = findViewById<EditText>(R.id.password)
         val confirmPassword = findViewById<EditText>(R.id.confirm_password)
         val btnRegister = findViewById<Button>(R.id.btn_register)
+        val btnVoltar = findViewById<Button>(R.id.btn_voltar)
 
         btnRegister.setOnClickListener {
             val nameInput = name.text.toString()
@@ -52,7 +55,13 @@ class RegisterActivity : AppCompatActivity() {
             // Navega para a tela de Login após o registro
             val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
             startActivity(intent)
-            finish() // Fecha a tela de registro
+            finish()
+        }
+
+        btnVoltar.setOnClickListener {
+            Toast.makeText(this, "Voltando para a tela de login", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
+            startActivity(intent)
         }
     }
 }

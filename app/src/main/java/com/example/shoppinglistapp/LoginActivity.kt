@@ -7,7 +7,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 
 class LoginActivity : AppCompatActivity() {
 
@@ -20,20 +19,19 @@ class LoginActivity : AppCompatActivity() {
         val btnLogin = findViewById<Button>(R.id.btn_login)
         val btnRegister = findViewById<Button>(R.id.btn_register)
 
-
         btnLogin.setOnClickListener {
             val emailInput = email.text.toString()
             val passwordInput = password.text.toString()
 
             // Verifica se o campo de email está preenchido e válido
             if (emailInput.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(emailInput).matches()) {
-                email.error = "Email inválido"
+                email.error = "Email inválido!"
                 return@setOnClickListener
             }
 
             // Verifica se o campo de senha está preenchido
             if (passwordInput.isEmpty()) {
-                password.error = "Campo obrigatório"
+                password.error = "Campo obrigatório!"
                 return@setOnClickListener
             }
 
@@ -44,7 +42,7 @@ class LoginActivity : AppCompatActivity() {
 
             // Verifica se o email e senha estão corretos
             if (emailInput == savedEmail && passwordInput == savedPassword) {
-                // Navega para a HomeActivity se o login for bem-sucedido
+                Toast.makeText(this, "Login efetuado com sucesso...", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this@LoginActivity, HomeActivity::class.java)
                 startActivity(intent)
                 finish() // Fecha a tela de login
