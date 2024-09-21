@@ -19,7 +19,7 @@
         android:id="@+id/item_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Título da Lista"
+        android:text=""
         android:textSize="16sp"
         android:textStyle="bold"
         android:gravity="center"
