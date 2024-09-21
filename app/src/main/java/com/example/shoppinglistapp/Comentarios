@@ -1,17 +1,18 @@
-**COISAS QUE FALTAM NO PROJETO**
-1- Tela Principal (Lista de Compras):
-    Listagem de listas de compras
+RF003 - Gestão de Listas de Compras
+* O aplicativo deve permitir criar, editar, listar e excluir listas de compras com título e imagem (opcional, possibilitando selecionar uma mídia de imagem do dispositivo.
+* A listagem deve ser ordenada alfabeticamente e exibir título e imagem. Caso não haja imagem, exibir um placeholder.
+* Ao excluir uma lista, todos os itens associados também devem ser excluídos.
 
-2- Tela de Edição/Criação de Lista de Compras (RF003):
-    Campo para título da lista
-    Seleção de imagem
 
-3- Tela de Itens da Lista (RF004):
-    Listagem de itens da lista de compras
-    Botão para adicionar novo item
+RF004 - Gestão de Itens da Lista
+* O aplicativo deve permitir criar, editar, listar e excluir itens em listas de compras.
+* Cada item deve incluir nome, quantidade, unidade e categoria. Por exemplo, 2 un de maçãs (fruta), 2 kg de frango (carne), etc.
+* Os itens devem ser apresentados dentro de suas respectivas listas de compras, exibindo nome, quantidade, unidade e o ícone da categoria. Devem estar em ordem alfabética e agrupados por categoria.
+* Deve ser possível marcar itens que já foram comprados, assim como desmarcar. Os itens marcados devem ficar separados (abaixo) dos demais.
 
-4- Tela de Adição/Edição de Itens (RF004):
-    Campos para nome, quantidade, unidade, categoria
+
+RF005 - Buscas
+* Permitir pesquisa por listas de compras e itens dentro das listas.A pesquisa poderá ser realizada a partir do nome do item ou da lista.
 
 
 5 - Requisitos Nao Funcionais
