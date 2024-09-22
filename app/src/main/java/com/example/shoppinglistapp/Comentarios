@@ -9,12 +9,6 @@ RF004 - Gestão de Itens da Lista
 * Deve ser possível marcar itens que já foram comprados, assim como desmarcar. Os itens marcados devem ficar separados (abaixo) dos demais.
 
 
-RF005 - Buscas
-* Permitir pesquisa por listas de compras e itens dentro das listas.A pesquisa poderá ser realizada a partir do nome do item ou da lista.
-
-
 5 - Requisitos Nao Funcionais
     Deve haver tratamento para que não haja perda de dados com mudanças de configurações do dispositivo (por exemplo, rotação de tela).
     Deve-se utilizar o recurso de vinculação de visualizações (ViewBinding).
-    O aplicativo deverá ser capaz de manipular dados de forma dinâmica. Assim sendo, na funcionalidade de Criar Lista, por exemplo, os dados precisarão ser armazenados em memória.
-

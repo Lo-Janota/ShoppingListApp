@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
             android:layout_weight="1"
-            android:hint="Pesquisar lista"
+            android:hint="Pesquisar lista ou item..."
             android:inputType="text" />
 
         <!-- Botão de Pesquisa -->

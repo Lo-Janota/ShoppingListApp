@@ -4,6 +4,7 @@ import ShoppingListAdapter
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
@@ -11,20 +12,25 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.appcompat.app.AlertDialog
 
-
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var adapter: ShoppingListAdapter
-    private val shoppingLists = mutableListOf<ShoppingList>() // Lista de compras
+    private val shoppingLists = mutableListOf<ShoppingList>() // Lista de compras original
+    private val filteredLists = mutableListOf<ShoppingList>() // Lista de compras filtrada
+    private lateinit var searchEditText: EditText // Campo de pesquisa
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        // Inicializando RecyclerView com GridLayoutManager
+        // Inicializando os componentes
+        searchEditText = findViewById(R.id.search_edit_text) // EditText para o campo de pesquisa
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view_lists)
         recyclerView.layoutManager = GridLayoutManager(this, 2) // 2 colunas
-        adapter = ShoppingListAdapter(shoppingLists) // Inicialize o adapter aqui
+
+        // Inicializando o adapter com as listas filtradas
+        filteredLists.addAll(shoppingLists)
+        adapter = ShoppingListAdapter(filteredLists)
         recyclerView.adapter = adapter
 
         // Encontrar os botões
@@ -38,8 +44,10 @@ class HomeActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // Implementação da funcionalidade de busca
         fabSearch.setOnClickListener {
-            Toast.makeText(this, "Pesquisar", Toast.LENGTH_SHORT).show()
+            val query = searchEditText.text.toString().trim() // Obter o texto de pesquisa
+            searchShoppingLists(query)
         }
 
         fabAddList.setOnClickListener {
@@ -50,7 +58,7 @@ class HomeActivity : AppCompatActivity() {
 
         // Ao clicar em um item da lista, abrir para editar
         adapter.setOnItemClickListener { position ->
-            val listToEdit = shoppingLists[position]
+            val listToEdit = filteredLists[position]
             val intent = Intent(this@HomeActivity, AddEditShoppingListActivity::class.java).apply {
                 putExtra("LIST_TITLE", listToEdit.title)
                 putExtra("LIST_IMAGE_URI", listToEdit.imageUri.toString())
@@ -60,7 +68,6 @@ class HomeActivity : AppCompatActivity() {
             startActivityForResult(intent, 1)
         }
 
-
         // Configurar o listener de exclusão
         adapter.setOnDeleteClickListener { position ->
             // Cria um AlertDialog para confirmação
@@ -69,12 +76,11 @@ class HomeActivity : AppCompatActivity() {
                 .setMessage("Você tem certeza que deseja excluir esta lista?")
                 .setPositiveButton("Sim") { dialog, which ->
                     // Se o usuário confirmar, remove a lista
-                    shoppingLists.removeAt(position)
+                    val listToRemove = filteredLists[position]
+                    shoppingLists.remove(listToRemove) // Remove da lista original
+                    filteredLists.removeAt(position) // Remove da lista filtrada
                     adapter.notifyItemRemoved(position) // Notifica o adaptador da remoção
-                    adapter.notifyItemRangeChanged(
-                        position,
-                        shoppingLists.size
-                    ) // Atualiza os itens restantes
+                    adapter.notifyItemRangeChanged(position, filteredLists.size) // Atualiza os itens restantes
                 }
                 .setNegativeButton("Não") { dialog, which ->
                     dialog.dismiss() // Apenas fecha o diálogo
@@ -83,6 +89,30 @@ class HomeActivity : AppCompatActivity() {
 
             alertDialog.show()
         }
+    }
+
+    // Função de busca
+    private fun searchShoppingLists(query: String) {
+        filteredLists.clear() // Limpar lista filtrada
+
+        if (query.isNotEmpty()) {
+            // Filtrar listas com base no título ou nos itens dentro da lista
+            for (list in shoppingLists) {
+                if (list.title.contains(query, ignoreCase = true)) {
+                    filteredLists.add(list)
+                }
+                /* Verifica se algum item dentro da lista contém o termo de pesquisa
+                if (list.items.any { it.name.contains(query, ignoreCase = true) }) {
+                    filteredLists.add(list)
+                } */
+            }
+        } else {
+            // Se o campo de busca estiver vazio, mostra todas as listas
+            filteredLists.addAll(shoppingLists)
+        }
+
+        // Atualiza o RecyclerView com os resultados filtrados
+        adapter.notifyDataSetChanged()
     }
 
     // Receber a nova lista de compras adicionada
@@ -108,11 +138,11 @@ class HomeActivity : AppCompatActivity() {
                     val newList = ShoppingList(title, imageUri)
                     shoppingLists.add(newList)
                     shoppingLists.sortBy { it.title }
+                    filteredLists.clear()
+                    filteredLists.addAll(shoppingLists)
                     adapter.notifyDataSetChanged()
                 }
             }
         }
     }
 }
-
-
