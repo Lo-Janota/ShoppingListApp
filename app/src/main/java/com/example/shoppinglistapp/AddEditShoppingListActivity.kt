@@ -15,6 +15,8 @@ class AddEditShoppingListActivity : AppCompatActivity() {
     private lateinit var editTextTitle: EditText
     private lateinit var imageViewSelected: ImageView
     private var selectedImageUri: Uri? = null
+    private var listPosition: Int = -1
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +26,17 @@ class AddEditShoppingListActivity : AppCompatActivity() {
         imageViewSelected = findViewById(R.id.image_view_selected)
         val buttonSelectImage = findViewById<Button>(R.id.button_select_image)
         val buttonSave = findViewById<Button>(R.id.button_save)
+
+        // Verifica se está em modo de edição
+        val isEditMode = intent.getBooleanExtra("EDIT_MODE", false)
+        if (isEditMode) {
+            listPosition = intent.getIntExtra("LIST_POSITION", -1) // Adiciona isso
+            val title = intent.getStringExtra("LIST_TITLE")
+            val imageUriString = intent.getStringExtra("LIST_IMAGE_URI")
+            editTextTitle.setText(title)
+            selectedImageUri = Uri.parse(imageUriString)
+            imageViewSelected.setImageURI(selectedImageUri)
+        }
 
         // Selecionar imagem da galeria
         buttonSelectImage.setOnClickListener {
@@ -38,12 +51,15 @@ class AddEditShoppingListActivity : AppCompatActivity() {
                 val resultIntent = Intent().apply {
                     putExtra("LIST_TITLE", title)
                     putExtra("LIST_IMAGE_URI", selectedImageUri?.toString())
+                    putExtra("EDIT_MODE", isEditMode) // Adiciona indicador de modo de edição
+                    putExtra("LIST_POSITION", listPosition) // Passa a posição da lista
                 }
                 setResult(Activity.RESULT_OK, resultIntent)
                 finish()
             }
         }
     }
+
 
     // Receber a imagem selecionada
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

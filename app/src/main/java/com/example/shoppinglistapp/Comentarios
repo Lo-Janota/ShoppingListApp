@@ -1,5 +1,4 @@
 RF003 - Gestão de Listas de Compras
-* O aplicativo deve permitir criar, editar, listar e excluir listas de compras com título e imagem (opcional, possibilitando selecionar uma mídia de imagem do dispositivo.
 * Ao excluir uma lista, todos os itens associados também devem ser excluídos.
 
 
