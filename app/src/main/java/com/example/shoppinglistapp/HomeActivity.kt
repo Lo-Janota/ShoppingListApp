@@ -29,7 +29,6 @@ class HomeActivity : AppCompatActivity() {
         recyclerView.layoutManager = GridLayoutManager(this, 2) // 2 colunas
 
         // Inicializando o adapter com as listas filtradas
-        filteredLists.addAll(shoppingLists)
         adapter = ShoppingListAdapter(filteredLists)
         recyclerView.adapter = adapter
 
@@ -101,10 +100,10 @@ class HomeActivity : AppCompatActivity() {
                 if (list.title.contains(query, ignoreCase = true)) {
                     filteredLists.add(list)
                 }
-                /* Verifica se algum item dentro da lista contém o termo de pesquisa
-                if (list.items.any { it.name.contains(query, ignoreCase = true) }) {
-                    filteredLists.add(list)
-                } */
+                // Verifica se algum item dentro da lista contém o termo de pesquisa
+                // if (list.items.any { it.name.contains(query, ignoreCase = true) }) {
+                //     filteredLists.add(list)
+                // }
             }
         } else {
             // Se o campo de busca estiver vazio, mostra todas as listas
@@ -115,7 +114,7 @@ class HomeActivity : AppCompatActivity() {
         adapter.notifyDataSetChanged()
     }
 
-    // Receber a nova lista de compras adicionada
+    // Receber a nova lista de compras adicionada ou atualizada
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1 && resultCode == RESULT_OK) {
@@ -131,15 +130,20 @@ class HomeActivity : AppCompatActivity() {
                     if (position != -1) {
                         // Atualiza a lista existente
                         shoppingLists[position] = ShoppingList(title, imageUri)
+                        filteredLists[position] = shoppingLists[position] // Atualiza na lista filtrada
+                        // Reordena as listas após a edição
+                        shoppingLists.sortBy { it.title }
+                        filteredLists.sortBy { it.title }
                         adapter.notifyItemChanged(position)
                     }
                 } else {
                     // Adicionar nova lista de compras
                     val newList = ShoppingList(title, imageUri)
                     shoppingLists.add(newList)
+                    // Reordena as listas após a adição
                     shoppingLists.sortBy { it.title }
                     filteredLists.clear()
-                    filteredLists.addAll(shoppingLists)
+                    filteredLists.addAll(shoppingLists) // Atualiza a lista filtrada
                     adapter.notifyDataSetChanged()
                 }
             }
