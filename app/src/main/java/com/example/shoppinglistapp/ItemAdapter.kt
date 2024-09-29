@@ -22,6 +22,26 @@ class ItemAdapter(private var groupedItems: Map<String, List<Item>>) : RecyclerV
         val itemPurchasedCheckBox: CheckBox = itemView.findViewById(R.id.item_purchased_checkbox)
 
         init {
+            itemPurchasedCheckBox.setOnCheckedChangeListener { _, isChecked ->
+                // Tente atualizar o item e notifique a mudança
+                try {
+                    val item = getItem(adapterPosition)
+                    item?.let {
+                        it.isPurchased = isChecked
+
+                        // Atualizar a lista
+                        val newGroupedItems = groupedItems.toMutableMap()
+                        newGroupedItems[it.category] = newGroupedItems[it.category]?.map { existingItem ->
+                            if (existingItem == it) it else existingItem
+                        } ?: listOf(it)
+
+                        updateItems(newGroupedItems)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace() // Log de erro
+                }
+            }
+
             itemView.setOnClickListener {
                 selectedItemPosition = adapterPosition
                 notifyDataSetChanged() // Para atualizar a seleção
@@ -35,41 +55,73 @@ class ItemAdapter(private var groupedItems: Map<String, List<Item>>) : RecyclerV
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        val allItems = groupedItems.values.flatten() // Lista de todos os itens
-        if (position < allItems.size) {
-            val item = allItems[position]
-            holder.itemName.text = item.name
-            holder.itemQuantity.text = item.quantity.toString()
-            holder.itemUnit.text = item.unit
+        val (nonPurchasedItems, purchasedItems) = getItemsSeparated()
+        val itemList = if (position < nonPurchasedItems.size) {
+            nonPurchasedItems
+        } else {
+            purchasedItems
+        }
 
-            // Definir ícone de categoria
-            holder.categoryIcon.setImageResource(
-                when (item.category) {
-                    "Alimentos" -> R.drawable.ic_alimentos
-                    "Frutas/Verduras/Legumes" -> R.drawable.ic_frutas
-                    "Carnes" -> R.drawable.ic_carnes
-                    "Bebidas" -> R.drawable.ic_bebidas
-                    "Frios" -> R.drawable.ic_frios
-                    "Padaria" -> R.drawable.ic_padaria
-                    "Higiene" -> R.drawable.ic_higiene
-                    "Limpeza" -> R.drawable.ic_limpeza
-                    "Outros" -> R.drawable.ic_default_category
-                    else -> R.drawable.ic_default_category
+        val currentItem = if (position < nonPurchasedItems.size) {
+            nonPurchasedItems[position]
+        } else {
+            purchasedItems[position - nonPurchasedItems.size]
+        }
+
+        holder.itemName.text = currentItem.name
+        holder.itemQuantity.text = currentItem.quantity.toString()
+        holder.itemUnit.text = currentItem.unit
+        holder.itemPurchasedCheckBox.isChecked = currentItem.isPurchased // Setando estado do checkbox
+
+        // Definir ícone de categoria
+        when (currentItem.category) {
+            "Alimentos" -> holder.categoryIcon.setImageResource(R.drawable.ic_alimentos)
+            "Frutas/Verduras/Legumes" -> holder.categoryIcon.setImageResource(R.drawable.ic_frutas)
+            "Carnes" -> holder.categoryIcon.setImageResource(R.drawable.ic_carnes)
+            "Bebidas" -> holder.categoryIcon.setImageResource(R.drawable.ic_bebidas)
+            "Frios" -> holder.categoryIcon.setImageResource(R.drawable.ic_frios)
+            "Padaria" -> holder.categoryIcon.setImageResource(R.drawable.ic_padaria)
+            "Higiene" -> holder.categoryIcon.setImageResource(R.drawable.ic_higiene)
+            "Limpeza" -> holder.categoryIcon.setImageResource(R.drawable.ic_limpeza)
+            "Outros" -> holder.categoryIcon.setImageResource(R.drawable.ic_default_category)
+            else -> holder.categoryIcon.setImageResource(R.drawable.ic_default_category)
+        }
+
+        // Marcar o item selecionado
+        if (selectedItemPosition == position) {
+            holder.itemView.setBackgroundColor(Color.LTGRAY) // Altere a cor ou estilo conforme desejado
+        } else {
+            holder.itemView.setBackgroundColor(Color.WHITE)
+        }
+    }
+
+    private fun getItemsSeparated(): Pair<List<Item>, List<Item>> {
+        val nonPurchasedItems = mutableListOf<Item>()
+        val purchasedItems = mutableListOf<Item>()
+
+        for (items in groupedItems.values) {
+            for (item in items) {
+                if (item.isPurchased) {
+                    purchasedItems.add(item)
+                } else {
+                    nonPurchasedItems.add(item)
                 }
-            )
+            }
+        }
+        return Pair(nonPurchasedItems, purchasedItems)
+    }
 
-            // Marcar o item selecionado
-            holder.itemView.setBackgroundColor(
-                if (selectedItemPosition == position) Color.LTGRAY else Color.WHITE
-            )
+    private fun getItem(position: Int): Item? {
+        val (nonPurchasedItems, purchasedItems) = getItemsSeparated()
+        return when {
+            position < nonPurchasedItems.size -> nonPurchasedItems[position]
+            position < nonPurchasedItems.size + purchasedItems.size -> purchasedItems[position - nonPurchasedItems.size]
+            else -> null
         }
     }
 
     fun getSelectedItem(): Item? {
-        val allItems = groupedItems.values.flatten() // Lista de todos os itens
-        return if (selectedItemPosition >= 0 && selectedItemPosition < allItems.size) {
-            allItems[selectedItemPosition]
-        } else null
+        return getItem(selectedItemPosition)
     }
 
     fun getSelectedItemPosition(): Int {
@@ -82,6 +134,7 @@ class ItemAdapter(private var groupedItems: Map<String, List<Item>>) : RecyclerV
     }
 
     override fun getItemCount(): Int {
-        return groupedItems.values.flatten().size
+        val (nonPurchasedItems, purchasedItems) = getItemsSeparated()
+        return nonPurchasedItems.size + purchasedItems.size
     }
 }

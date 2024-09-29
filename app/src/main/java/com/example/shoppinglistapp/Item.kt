@@ -6,7 +6,7 @@ data class Item(
     val quantity: Int,
     val unit: String,
     val category: String,
-    var isPurchased: Boolean
+    var isPurchased: Boolean = false
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "", // Lê o nome
