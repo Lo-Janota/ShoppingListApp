@@ -40,8 +40,8 @@ class AddItemActivity : AppCompatActivity() {
         categoryIcon = findViewById(R.id.item_category_icon)
         val categorySpinner = findViewById<Spinner>(R.id.category_spinner)
 
-        val categories = listOf("Frutas", "Carnes", "Bebidas")
-        val icons = listOf(R.drawable.ic_fruits, R.drawable.ic_meats, R.drawable.ic_drinks)
+        val categories = listOf("Alimentos", "Frutas/Verduras/Legumes", "Carnes", "Bebidas", "Frios", "Padaria", "Higiene", "Limpeza", "Outros")
+        val icons = listOf(R.drawable.ic_alimentos,R.drawable.ic_frutas, R.drawable.ic_carnes, R.drawable.ic_bebidas, R.drawable.ic_frios, R.drawable.ic_padaria, R.drawable.ic_higiene, R.drawable.ic_limpeza, R.drawable.ic_default_category)
 
         val adapter = object : ArrayAdapter<String>(this, R.layout.spinner_item, categories) {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {

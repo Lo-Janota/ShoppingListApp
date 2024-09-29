@@ -30,11 +30,16 @@ class ItemAdapter(private val items: List<Item>) : RecyclerView.Adapter<ItemAdap
         holder.itemUnit.text = item.unit
 
         when (item.category) {
-            "Frutas" -> holder.categoryIcon.setImageResource(R.drawable.ic_fruits)
-            "Carnes" -> holder.categoryIcon.setImageResource(R.drawable.ic_meats)
-            "Bebidas" -> holder.categoryIcon.setImageResource(R.drawable.ic_drinks)
-            // Adicione mais categorias conforme necessário
-            else -> holder.categoryIcon.setImageResource(R.drawable.ic_placeholder) // Ícone padrão
+            "Alimentos" -> holder.categoryIcon.setImageResource(R.drawable.ic_alimentos)
+            "Frutas/Verduras/Legumes" -> holder.categoryIcon.setImageResource(R.drawable.ic_frutas)
+            "Carnes" -> holder.categoryIcon.setImageResource(R.drawable.ic_carnes)
+            "Bebidas" -> holder.categoryIcon.setImageResource(R.drawable.ic_bebidas)
+            "Frios" -> holder.categoryIcon.setImageResource(R.drawable.ic_frios)
+            "Padaria" -> holder.categoryIcon.setImageResource(R.drawable.ic_padaria)
+            "Higiene" -> holder.categoryIcon.setImageResource(R.drawable.ic_higiene)
+            "Limpeza" -> holder.categoryIcon.setImageResource(R.drawable.ic_limpeza)
+            "Outros" -> holder.categoryIcon.setImageResource(R.drawable.ic_default_category)
+            else -> holder.categoryIcon.setImageResource(R.drawable.ic_default_category)
         }
     }
 
