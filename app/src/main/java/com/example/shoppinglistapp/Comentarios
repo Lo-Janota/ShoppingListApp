@@ -12,3 +12,9 @@ RF004 - Gestão de Itens da Lista
 5 - Requisitos Nao Funcionais
     Deve haver tratamento para que não haja perda de dados com mudanças de configurações do dispositivo (por exemplo, rotação de tela).
     Deve-se utilizar o recurso de vinculação de visualizações (ViewBinding).
+
+
+
+Em seguida, podemos adicionar a lógica para editar, excluir, e
+marcar/desmarcar como comprado, além de ordenar alfabeticamente e
+agrupar por categoria.

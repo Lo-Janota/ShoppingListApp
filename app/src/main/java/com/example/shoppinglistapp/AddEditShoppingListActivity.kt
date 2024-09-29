@@ -20,7 +20,7 @@ class AddEditShoppingListActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_edit_shopping_list)
+        setContentView(R.layout.activity_edit_list)
 
         editTextTitle = findViewById(R.id.edit_text_title)
         imageViewSelected = findViewById(R.id.image_view_selected)

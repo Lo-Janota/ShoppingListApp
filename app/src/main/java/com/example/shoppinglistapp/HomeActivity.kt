@@ -88,6 +88,18 @@ class HomeActivity : AppCompatActivity() {
 
             alertDialog.show()
         }
+
+        adapter.setOnViewListClickListener {
+                position ->
+            // Pegue a lista de compras selecionada
+            val selectedList = shoppingLists[position]
+
+            // Abra a Activity para ver os itens dessa lista
+            val intent = Intent(this, ItemListActivity::class.java).apply {
+                putExtra("SHOPPING_LIST_TITLE", selectedList.title)
+            }
+            startActivity(intent)
+        }
     }
 
     // Função de busca

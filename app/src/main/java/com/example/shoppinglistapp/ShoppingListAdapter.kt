@@ -13,11 +13,13 @@ class ShoppingListAdapter(
 
     private var itemClickListener: ((Int) -> Unit)? = null
     private var deleteClickListener: ((Int) -> Unit)? = null
+    private var viewListClickListener: ((Int) -> Unit)? = null
 
     class ShoppingListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.item_title)
         val imageView: ImageView = itemView.findViewById(R.id.item_image)
-        val deleteButton: ImageView = itemView.findViewById(R.id.btn_delete) // Adicione isso
+        val deleteButton: ImageView = itemView.findViewById(R.id.btn_delete)
+        val viewButton: ImageView = itemView.findViewById(R.id.btn_viewList)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShoppingListViewHolder {
@@ -45,6 +47,11 @@ class ShoppingListAdapter(
         holder.deleteButton.setOnClickListener {
             deleteClickListener?.invoke(position)
         }
+
+        // Configurar o clique do botão "olho" (viewButton) para ver a lista de itens
+        holder.viewButton.setOnClickListener {
+            viewListClickListener?.invoke(position)
+        }
     }
 
     override fun getItemCount() = shoppingLists.size
@@ -55,6 +62,10 @@ class ShoppingListAdapter(
 
     fun setOnDeleteClickListener(listener: (Int) -> Unit) {
         deleteClickListener = listener
+    }
+
+    fun setOnViewListClickListener(listener: (Int) -> Unit) {
+        viewListClickListener = listener // Novo listener para ver a lista
     }
 
     // Método para remover uma lista
