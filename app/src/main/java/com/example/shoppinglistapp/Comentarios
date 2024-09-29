@@ -1,6 +1,4 @@
 RF004 - Gestão de Itens da Lista
-* O aplicativo deve permitir criar, editar, listar e excluir itens em listas de compras.
-* Os itens devem ser apresentados dentro de suas respectivas listas de compras, exibindo nome, quantidade, unidade e o ícone da categoria. Devem estar em ordem alfabética e agrupados por categoria.
 * Deve ser possível marcar itens que já foram comprados, assim como desmarcar. Os itens marcados devem ficar separados (abaixo) dos demais.
 
 
@@ -9,5 +7,4 @@ RF004 - Gestão de Itens da Lista
     Deve-se utilizar o recurso de vinculação de visualizações (ViewBinding).
 
 
-1) Adicionar a lógica para editar, excluir.
-além de ordenar alfabeticamente e agrupar por categoria.
+

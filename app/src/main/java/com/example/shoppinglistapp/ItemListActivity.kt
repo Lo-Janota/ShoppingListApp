@@ -3,8 +3,10 @@ package com.example.shoppinglistapp
 
 import Item
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -14,18 +16,19 @@ import androidx.recyclerview.widget.RecyclerView
 class ItemListActivity : AppCompatActivity() {
 
     private lateinit var itemAdapter: ItemAdapter
-    private val items = mutableListOf<Item>()
+    private lateinit var shoppingList: MutableList<Item>
+    private val REQUEST_EDIT_ITEM = 1
 
     @SuppressLint("WrongViewCast")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_item_list)
 
-        // Inicializando a RecyclerView e o Adapter
-        val recyclerView = findViewById<RecyclerView>(R.id.recycler_view_items)
+        // Inicializando a lista de compras e o Adapter
+        shoppingList = mutableListOf() // Inicialize sua lista de compras
+        itemAdapter = ItemAdapter(groupItems(shoppingList))
 
-        // Passar um mapa vazio inicialmente
-        itemAdapter = ItemAdapter(emptyMap())
+        val recyclerView = findViewById<RecyclerView>(R.id.recycler_view_items)
         recyclerView.adapter = itemAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -36,21 +39,39 @@ class ItemListActivity : AppCompatActivity() {
             startActivityForResult(intent, 1)
         }
 
+        // Botão para editar itens
         val editButton = findViewById<ImageButton>(R.id.btn_edit_item)
         editButton.setOnClickListener {
-            // Ação para editar item selecionado
+            val selectedItem = itemAdapter.getSelectedItem() // Método para obter o item selecionado
+            val position = itemAdapter.getSelectedItemPosition() // Método para obter a posição do item selecionado
+
+            if (selectedItem != null && position >= 0) {
+                val intent = Intent(this, EditItemActivity::class.java).apply {
+                    putExtra("ITEM", selectedItem)
+                    putExtra("POSITION", position)
+                }
+                startActivityForResult(intent, REQUEST_EDIT_ITEM)
+            }
         }
 
+        // Botão para excluir itens
         val deleteButton = findViewById<ImageButton>(R.id.btn_delete_item)
         deleteButton.setOnClickListener {
-            // Ação para excluir item selecionado
+            val position = itemAdapter.getSelectedItemPosition() // Método para obter a posição do item selecionado
+            if (position >= 0) {
+                shoppingList.removeAt(position) // Remove o item da lista
+                itemAdapter.updateItems(groupItems(shoppingList)) // Atualiza os itens agrupados
+                itemAdapter.notifyDataSetChanged() // Notifica o adaptador
+            }
         }
 
+        // Botão para voltar
         val backButton = findViewById<ImageButton>(R.id.btn_back)
         backButton.setOnClickListener {
             finish()
         }
 
+        // Exibir o nome da lista
         val listName = intent.getStringExtra("SHOPPING_LIST_TITLE")
         val listNameTextView = findViewById<TextView>(R.id.tv_list_name)
         listNameTextView.text = listName ?: "Nome da Lista"
@@ -62,17 +83,34 @@ class ItemListActivity : AppCompatActivity() {
         if (requestCode == 1 && resultCode == RESULT_OK) {
             val newItem = data?.getParcelableExtra<Item>("NEW_ITEM")
             if (newItem != null) {
-                items.add(newItem)
+                shoppingList.add(newItem)
                 // Ordenar os itens pelo nome
-                items.sortBy { it.name }
+                shoppingList.sortBy { it.name }
 
                 // Agrupar itens por categoria
-                val groupedItems = items.groupBy { it.category }
+                val groupedItems = groupItems(shoppingList)
+                itemAdapter.updateItems(groupedItems) // Atualiza os itens agrupados
+                itemAdapter.notifyItemInserted(shoppingList.size - 1) // Notifica que um novo item foi inserido
 
-                // Atualizar o adaptador com a lista agrupada
-                itemAdapter.updateItems(groupedItems)
-                itemAdapter.notifyDataSetChanged()
+                // Log para depuração
+                Log.d("ShoppingList", "Item added: ${newItem.name}, Total items: ${shoppingList.size}")
             }
         }
+
+        if (requestCode == REQUEST_EDIT_ITEM && resultCode == Activity.RESULT_OK) {
+            val editedItem = data?.getParcelableExtra<Item>("EDITED_ITEM")
+            val position = data?.getIntExtra("POSITION", -1) ?: -1
+
+            if (position >= 0 && editedItem != null) {
+                shoppingList[position] = editedItem // Atualiza o item na lista
+                itemAdapter.updateItems(groupItems(shoppingList)) // Atualiza os itens no adaptador
+                itemAdapter.notifyDataSetChanged() // Notifica que os dados mudaram
+            }
+        }
+    }
+
+    // Método para agrupar itens por categoria
+    private fun groupItems(items: List<Item>): Map<String, List<Item>> {
+        return items.groupBy { it.category }
     }
 }

@@ -50,6 +50,13 @@
             android:exported="true">
         </activity>
 
+        <activity
+            android:name=".EditItemActivity"
+            android:exported="true">
+        </activity>
+
+
+
     </application>
 
 </manifest>
