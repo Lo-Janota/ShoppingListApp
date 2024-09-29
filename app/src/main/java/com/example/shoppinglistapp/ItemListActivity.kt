@@ -15,6 +15,7 @@ class ItemListActivity : AppCompatActivity() {
     private lateinit var itemAdapter: ItemAdapter // Adapter da RecyclerView
     private val items = mutableListOf<Item>()     // Lista de itens
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_item_list)
@@ -30,6 +31,11 @@ class ItemListActivity : AppCompatActivity() {
         addItemButton.setOnClickListener {
             val intent = Intent(this, AddItemActivity::class.java)
             startActivityForResult(intent, 1) // Iniciar AddItemActivity para adicionar um novo item
+        }
+
+        val backButton = findViewById<Button>(R.id.btn_back)
+        backButton.setOnClickListener {
+            finish() // Fecha a Activity e volta à tela anterior
         }
 
         // Adicionar lógica para receber os dados da lista de compras e exibir os itens aqui

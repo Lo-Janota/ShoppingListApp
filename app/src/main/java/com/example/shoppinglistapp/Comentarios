@@ -4,7 +4,6 @@ RF003 - Gestão de Listas de Compras
 
 RF004 - Gestão de Itens da Lista
 * O aplicativo deve permitir criar, editar, listar e excluir itens em listas de compras.
-* Cada item deve incluir nome, quantidade, unidade e categoria. Por exemplo, 2 un de maçãs (fruta), 2 kg de frango (carne), etc.
 * Os itens devem ser apresentados dentro de suas respectivas listas de compras, exibindo nome, quantidade, unidade e o ícone da categoria. Devem estar em ordem alfabética e agrupados por categoria.
 * Deve ser possível marcar itens que já foram comprados, assim como desmarcar. Os itens marcados devem ficar separados (abaixo) dos demais.
 
@@ -15,6 +14,7 @@ RF004 - Gestão de Itens da Lista
 
 
 
-Em seguida, podemos adicionar a lógica para editar, excluir, e
+* Em seguida, podemos adicionar a lógica para editar, excluir, e
 marcar/desmarcar como comprado, além de ordenar alfabeticamente e
 agrupar por categoria.
+* Botao de voltar (quando adicionar/editar a lista)

@@ -17,7 +17,7 @@ class AddItemActivity : AppCompatActivity() {
     private lateinit var quantityEditText: EditText
     private lateinit var unitEditText: EditText
     private lateinit var categoryIcon: ImageView
-    private var selectedCategoryIcon: Int = R.drawable.ic_default_category // Ícone padrão
+    private var selectedCategoryIcon: Int = R.drawable.ic_default_category
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,11 +52,20 @@ class AddItemActivity : AppCompatActivity() {
                 isPurchased = false
             )
 
+
             // Enviar o item de volta para ItemListActivity
             val resultIntent = Intent()
             resultIntent.putExtra("NEW_ITEM", newItem)
             setResult(Activity.RESULT_OK, resultIntent)
-            finish() // Fechar a AddItemActivity e voltar para a ItemListActivity
+            finish()
+
         }
+
+        val cancelButton = findViewById<Button>(R.id.btn_cancel)
+        cancelButton.setOnClickListener {
+            finish()
+        }
+
+
     }
 }
