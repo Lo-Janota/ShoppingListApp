@@ -95,9 +95,8 @@ class HomeActivity : AppCompatActivity() {
             val selectedList = shoppingLists[position]
 
             // Abra a Activity para ver os itens dessa lista
-            val intent = Intent(this, ItemListActivity::class.java).apply {
-                putExtra("SHOPPING_LIST_TITLE", selectedList.title)
-            }
+            val intent = Intent(this, ItemListActivity::class.java)
+            intent.putExtra("SHOPPING_LIST_TITLE", selectedList.title)
             startActivity(intent)
         }
     }
@@ -112,10 +111,6 @@ class HomeActivity : AppCompatActivity() {
                 if (list.title.contains(query, ignoreCase = true)) {
                     filteredLists.add(list)
                 }
-                // Verifica se algum item dentro da lista contém o termo de pesquisa
-                // if (list.items.any { it.name.contains(query, ignoreCase = true) }) {
-                //     filteredLists.add(list)
-                // }
             }
         } else {
             // Se o campo de busca estiver vazio, mostra todas as listas

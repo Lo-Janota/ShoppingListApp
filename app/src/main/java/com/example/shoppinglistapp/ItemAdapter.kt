@@ -14,8 +14,9 @@ class ItemAdapter(private val items: List<Item>) : RecyclerView.Adapter<ItemAdap
         val itemName: TextView = itemView.findViewById(R.id.item_name)
         val itemQuantity: TextView = itemView.findViewById(R.id.item_quantity)
         val itemUnit: TextView = itemView.findViewById(R.id.item_unit)
-        val itemCategoryIcon: ImageView = itemView.findViewById(R.id.item_category_icon)
         val itemPurchasedCheckBox: CheckBox = itemView.findViewById(R.id.item_purchased_checkbox)
+
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
