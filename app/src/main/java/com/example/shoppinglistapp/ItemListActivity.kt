@@ -12,33 +12,30 @@ import androidx.recyclerview.widget.RecyclerView
 
 class ItemListActivity : AppCompatActivity() {
 
-    private lateinit var itemAdapter: ItemAdapter // Adapter da RecyclerView
-    private val items = mutableListOf<Item>()     // Lista de itens
-
+    private lateinit var itemAdapter: ItemAdapter
+    private val items = mutableListOf<Item>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_item_list)
 
-        // Inicializando a RecyclerView
+        // Inicializando a RecyclerView e o Adapter
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view_items)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        itemAdapter = ItemAdapter(items)
+        itemAdapter = ItemAdapter(items) // Usando a lista correta 'items'
         recyclerView.adapter = itemAdapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
 
         // Botão para adicionar novos itens
         val addItemButton = findViewById<Button>(R.id.btn_add_item)
         addItemButton.setOnClickListener {
             val intent = Intent(this, AddItemActivity::class.java)
-            startActivityForResult(intent, 1) // Iniciar AddItemActivity para adicionar um novo item
+            startActivityForResult(intent, 1)
         }
 
         val backButton = findViewById<Button>(R.id.btn_back)
         backButton.setOnClickListener {
-            finish() // Fecha a Activity e volta à tela anterior
+            finish()
         }
-
-        // Adicionar lógica para receber os dados da lista de compras e exibir os itens aqui
     }
 
     // Receber o novo item da AddItemActivity
@@ -48,9 +45,10 @@ class ItemListActivity : AppCompatActivity() {
             val newItem = data?.getParcelableExtra<Item>("NEW_ITEM")
             if (newItem != null) {
                 items.add(newItem)
-                items.sortBy { it.name } // Ordena alfabeticamente
-                itemAdapter.notifyDataSetChanged()
+                items.sortBy { it.name } // Ordena os itens pelo nome
+                itemAdapter.notifyDataSetChanged() // Atualiza o Adapter com a nova lista
             }
         }
     }
 }
+

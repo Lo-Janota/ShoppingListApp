@@ -10,6 +10,7 @@ import com.example.shoppinglistapp.R
 class ItemAdapter(private val items: List<Item>) : RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
 
     inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val categoryIcon: ImageView = itemView.findViewById(R.id.item_category_icon)
         val itemName: TextView = itemView.findViewById(R.id.item_name)
         val itemQuantity: TextView = itemView.findViewById(R.id.item_quantity)
         val itemUnit: TextView = itemView.findViewById(R.id.item_unit)
@@ -27,8 +28,14 @@ class ItemAdapter(private val items: List<Item>) : RecyclerView.Adapter<ItemAdap
         holder.itemName.text = item.name
         holder.itemQuantity.text = item.quantity.toString()
         holder.itemUnit.text = item.unit
-        holder.itemCategoryIcon.setImageResource(item.categoryIconResId)
-        holder.itemPurchasedCheckBox.isChecked = item.isPurchased
+
+        when (item.category) {
+            "Frutas" -> holder.categoryIcon.setImageResource(R.drawable.ic_fruits)
+            "Carnes" -> holder.categoryIcon.setImageResource(R.drawable.ic_meats)
+            "Bebidas" -> holder.categoryIcon.setImageResource(R.drawable.ic_drinks)
+            // Adicione mais categorias conforme necessário
+            else -> holder.categoryIcon.setImageResource(R.drawable.ic_placeholder) // Ícone padrão
+        }
     }
 
     override fun getItemCount(): Int = items.size

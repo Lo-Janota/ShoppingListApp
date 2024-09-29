@@ -28,16 +28,27 @@
             android:id="@+id/edit_item_unit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Unidade (ex: kg, un, etc.)" />
+            android:hint="Unidade" />
 
+        <!-- Ícone de Categoria -->
         <ImageView
             android:id="@+id/item_category_icon"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/ic_default_category"
             android:layout_gravity="center_horizontal"
-            android:contentDescription="Ícone da categoria" />
+            android:contentDescription="Ícone de Categoria"/>
 
+        <!-- Spinner de Categoria -->
+        <Spinner
+            android:id="@+id/category_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="Selecione a Categoria"/>
+
+        <!-- Botões -->
         <Button
             android:id="@+id/btn_save_item"
             android:layout_width="wrap_content"
@@ -55,9 +66,6 @@
             android:layout_marginTop="16dp"
             android:backgroundTint="@color/green"
             android:text="Cancelar" />
-
-
     </LinearLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
