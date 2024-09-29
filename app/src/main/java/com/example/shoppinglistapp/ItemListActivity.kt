@@ -2,12 +2,9 @@
 package com.example.shoppinglistapp
 
 import Item
-import ItemAdapter
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.media.Image
 import android.os.Bundle
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -26,7 +23,9 @@ class ItemListActivity : AppCompatActivity() {
 
         // Inicializando a RecyclerView e o Adapter
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view_items)
-        itemAdapter = ItemAdapter(items) // Usando a lista correta 'items'
+
+        // Passar um mapa vazio inicialmente
+        itemAdapter = ItemAdapter(emptyMap())
         recyclerView.adapter = itemAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -64,10 +63,16 @@ class ItemListActivity : AppCompatActivity() {
             val newItem = data?.getParcelableExtra<Item>("NEW_ITEM")
             if (newItem != null) {
                 items.add(newItem)
-                items.sortBy { it.name } // Ordena os itens pelo nome
-                itemAdapter.notifyDataSetChanged() // Atualiza o Adapter com a nova lista
+                // Ordenar os itens pelo nome
+                items.sortBy { it.name }
+
+                // Agrupar itens por categoria
+                val groupedItems = items.groupBy { it.category }
+
+                // Atualizar o adaptador com a lista agrupada
+                itemAdapter.updateItems(groupedItems)
+                itemAdapter.notifyDataSetChanged()
             }
         }
     }
 }
-

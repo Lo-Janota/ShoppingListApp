@@ -9,7 +9,5 @@ RF004 - Gestão de Itens da Lista
     Deve-se utilizar o recurso de vinculação de visualizações (ViewBinding).
 
 
-Agora, preciso fazer as seguintes coisas (baseado nos arquivos que eu te mandei anteriormente)
-
 1) Adicionar a lógica para editar, excluir.
 além de ordenar alfabeticamente e agrupar por categoria.
