@@ -43,8 +43,10 @@ class ItemAdapter(private var groupedItems: Map<String, List<Item>>) : RecyclerV
             }
 
             itemView.setOnClickListener {
-                selectedItemPosition = adapterPosition
-                notifyDataSetChanged() // Para atualizar a seleção
+                if (selectedItemPosition != adapterPosition) {
+                    selectedItemPosition = adapterPosition
+                    notifyDataSetChanged() // Notifica que os dados mudaram
+                }
             }
         }
     }

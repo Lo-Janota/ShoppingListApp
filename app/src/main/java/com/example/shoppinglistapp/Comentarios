@@ -1,6 +1,5 @@
 RF004 - Gestão de Itens da Lista
     Quando eu tenho uma lista de produtos, e clico para voltar (para a home activity) a lista nao é gravada na memoria e some
-    Quando eu não seleciono item, e clico para excluir, toda a lista é removida
     Preciso pesquisar por nome do item tambem (junto com o nome da lista)
 
 5 - Requisitos Nao Funcionais

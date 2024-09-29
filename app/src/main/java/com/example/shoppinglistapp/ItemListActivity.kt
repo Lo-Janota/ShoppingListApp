@@ -59,9 +59,14 @@ class ItemListActivity : AppCompatActivity() {
         deleteButton.setOnClickListener {
             val position = itemAdapter.getSelectedItemPosition() // Método para obter a posição do item selecionado
             if (position >= 0) {
-                shoppingList.removeAt(position) // Remove o item da lista
-                itemAdapter.updateItems(groupItems(shoppingList)) // Atualiza os itens agrupados
-                itemAdapter.notifyDataSetChanged() // Notifica o adaptador
+                // Encontrar o item selecionado
+                val selectedItem = itemAdapter.getSelectedItem()
+                if (selectedItem != null) {
+                    shoppingList.remove(selectedItem) // Remove o item da lista
+                    itemAdapter.updateItems(groupItems(shoppingList)) // Atualiza os itens agrupados
+                    itemAdapter.notifyItemRemoved(position) // Notifica que um item foi removido
+                    itemAdapter.notifyDataSetChanged() // Em caso de que a estrutura de dados tenha mudado
+                }
             }
         }
 
