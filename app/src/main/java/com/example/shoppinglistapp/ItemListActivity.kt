@@ -12,6 +12,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
+import com.google.gson.Gson
 
 class ItemListActivity : AppCompatActivity() {
 
@@ -26,6 +28,19 @@ class ItemListActivity : AppCompatActivity() {
 
         // Inicializando a lista de compras e o Adapter
         shoppingList = mutableListOf() // Inicialize sua lista de compras
+        itemAdapter = ItemAdapter(groupItems(shoppingList))
+
+        val sharedPreferences = getSharedPreferences("ShoppingListApp", MODE_PRIVATE)
+        val savedListJson = sharedPreferences.getString("SAVED_LIST", null)
+
+        if (savedListJson != null) {
+            val gson = Gson()
+            val itemType = object : TypeToken<List<Item>>() {}.type
+            shoppingList = gson.fromJson(savedListJson, itemType)
+        } else {
+            shoppingList = mutableListOf()
+        }
+
         itemAdapter = ItemAdapter(groupItems(shoppingList))
 
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view_items)
@@ -113,6 +128,20 @@ class ItemListActivity : AppCompatActivity() {
             }
         }
     }
+
+    override fun onPause() {
+        super.onPause()
+        val sharedPreferences = getSharedPreferences("ShoppingListApp", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+
+        // Converter a lista de itens para JSON (exemplo usando Gson)
+        val gson = Gson()
+        val jsonList = gson.toJson(shoppingList)
+
+        editor.putString("SAVED_LIST", jsonList)
+        editor.apply()
+    }
+
 
     // Método para agrupar itens por categoria
     private fun groupItems(items: List<Item>): Map<String, List<Item>> {
