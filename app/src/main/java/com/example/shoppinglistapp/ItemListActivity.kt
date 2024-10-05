@@ -1,4 +1,3 @@
-// ItemListActivity.kt
 package com.example.shoppinglistapp
 
 import Item
@@ -7,58 +6,55 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.ImageButton
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
+import com.example.shoppinglistapp.databinding.ActivityItemListBinding
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class ItemListActivity : AppCompatActivity() {
 
     private lateinit var itemAdapter: ItemAdapter
-    private lateinit var shoppingList: MutableList<Item>
+    private lateinit var shoppingList: ShoppingList
+    private lateinit var binding: ActivityItemListBinding
     private val REQUEST_EDIT_ITEM = 1
 
     @SuppressLint("WrongViewCast")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_item_list)
+        binding = ActivityItemListBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        // Inicializando a lista de compras e o Adapter
-        shoppingList = mutableListOf() // Inicialize sua lista de compras
-        itemAdapter = ItemAdapter(groupItems(shoppingList))
+        // Inicializando a lista de compras com seu título
+        val listTitle = intent.getStringExtra("SHOPPING_LIST_TITLE") ?: "Nova Lista"
+        shoppingList = ShoppingList(title = listTitle)
 
+        // Carregar a lista de itens se existir
         val sharedPreferences = getSharedPreferences("ShoppingListApp", MODE_PRIVATE)
-        val savedListJson = sharedPreferences.getString("SAVED_LIST", null)
-
+        val savedListJson = sharedPreferences.getString("SAVED_LIST_${shoppingList.title}", null)
         if (savedListJson != null) {
             val gson = Gson()
-            val itemType = object : TypeToken<List<Item>>() {}.type
-            shoppingList = gson.fromJson(savedListJson, itemType)
-        } else {
-            shoppingList = mutableListOf()
+            val type = object : TypeToken<ShoppingList>() {}.type
+            shoppingList = gson.fromJson(savedListJson, type)
         }
 
-        itemAdapter = ItemAdapter(groupItems(shoppingList))
+        // Inicializando o Adapter
+        itemAdapter = ItemAdapter(groupItems(shoppingList.items))
 
-        val recyclerView = findViewById<RecyclerView>(R.id.recycler_view_items)
-        recyclerView.adapter = itemAdapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        // Configurando RecyclerView
+        binding.recyclerViewItems.adapter = itemAdapter
+        binding.recyclerViewItems.layoutManager = LinearLayoutManager(this)
 
         // Botão para adicionar novos itens
-        val addItemButton = findViewById<ImageButton>(R.id.btn_add_item)
-        addItemButton.setOnClickListener {
+        binding.btnAddItem.setOnClickListener {
             val intent = Intent(this, AddItemActivity::class.java)
             startActivityForResult(intent, 1)
         }
 
         // Botão para editar itens
-        val editButton = findViewById<ImageButton>(R.id.btn_edit_item)
-        editButton.setOnClickListener {
-            val selectedItem = itemAdapter.getSelectedItem() // Método para obter o item selecionado
-            val position = itemAdapter.getSelectedItemPosition() // Método para obter a posição do item selecionado
+        binding.btnEditItem.setOnClickListener {
+            val selectedItem = itemAdapter.getSelectedItem()
+            val position = itemAdapter.getSelectedItemPosition()
 
             if (selectedItem != null && position >= 0) {
                 val intent = Intent(this, EditItemActivity::class.java).apply {
@@ -70,31 +66,27 @@ class ItemListActivity : AppCompatActivity() {
         }
 
         // Botão para excluir itens
-        val deleteButton = findViewById<ImageButton>(R.id.btn_delete_item)
-        deleteButton.setOnClickListener {
-            val position = itemAdapter.getSelectedItemPosition() // Método para obter a posição do item selecionado
+        binding.btnDeleteItem.setOnClickListener {
+            val position = itemAdapter.getSelectedItemPosition()
             if (position >= 0) {
                 // Encontrar o item selecionado
                 val selectedItem = itemAdapter.getSelectedItem()
                 if (selectedItem != null) {
-                    shoppingList.remove(selectedItem) // Remove o item da lista
-                    itemAdapter.updateItems(groupItems(shoppingList)) // Atualiza os itens agrupados
-                    itemAdapter.notifyItemRemoved(position) // Notifica que um item foi removido
-                    itemAdapter.notifyDataSetChanged() // Em caso de que a estrutura de dados tenha mudado
+                    shoppingList.items.remove(selectedItem) // Remove o item da lista
+                    itemAdapter.updateItems(groupItems(shoppingList.items))
+                    itemAdapter.notifyItemRemoved(position)
+                    itemAdapter.notifyDataSetChanged()
                 }
             }
         }
 
         // Botão para voltar
-        val backButton = findViewById<ImageButton>(R.id.btn_back)
-        backButton.setOnClickListener {
+        binding.btnBack.setOnClickListener {
             finish()
         }
 
         // Exibir o nome da lista
-        val listName = intent.getStringExtra("SHOPPING_LIST_TITLE")
-        val listNameTextView = findViewById<TextView>(R.id.tv_list_name)
-        listNameTextView.text = listName ?: "Nome da Lista"
+        binding.tvListName.text = shoppingList.title
     }
 
     // Receber o novo item da AddItemActivity
@@ -103,17 +95,13 @@ class ItemListActivity : AppCompatActivity() {
         if (requestCode == 1 && resultCode == RESULT_OK) {
             val newItem = data?.getParcelableExtra<Item>("NEW_ITEM")
             if (newItem != null) {
-                shoppingList.add(newItem)
-                // Ordenar os itens pelo nome
-                shoppingList.sortBy { it.name }
-
-                // Agrupar itens por categoria
-                val groupedItems = groupItems(shoppingList)
-                itemAdapter.updateItems(groupedItems) // Atualiza os itens agrupados
-                itemAdapter.notifyItemInserted(shoppingList.size - 1) // Notifica que um novo item foi inserido
+                shoppingList.items.add(newItem)
+                shoppingList.items.sortBy { it.name } // Ordenar os itens pelo nome
+                itemAdapter.updateItems(groupItems(shoppingList.items))
+                itemAdapter.notifyItemInserted(shoppingList.items.size - 1)
 
                 // Log para depuração
-                Log.d("ShoppingList", "Item added: ${newItem.name}, Total items: ${shoppingList.size}")
+                Log.d("ShoppingList", "Item added: ${newItem.name}, Total items: ${shoppingList.items.size}")
             }
         }
 
@@ -122,8 +110,8 @@ class ItemListActivity : AppCompatActivity() {
             val position = data?.getIntExtra("POSITION", -1) ?: -1
 
             if (position >= 0 && editedItem != null) {
-                shoppingList[position] = editedItem // Atualiza o item na lista
-                itemAdapter.updateItems(groupItems(shoppingList)) // Atualiza os itens no adaptador
+                shoppingList.items[position] = editedItem // Atualiza o item na lista
+                itemAdapter.updateItems(groupItems(shoppingList.items))
                 itemAdapter.notifyDataSetChanged() // Notifica que os dados mudaram
             }
         }
@@ -134,14 +122,13 @@ class ItemListActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("ShoppingListApp", MODE_PRIVATE)
         val editor = sharedPreferences.edit()
 
-        // Converter a lista de itens para JSON (exemplo usando Gson)
+        // Salvar a shoppingList como JSON
         val gson = Gson()
         val jsonList = gson.toJson(shoppingList)
 
-        editor.putString("SAVED_LIST", jsonList)
+        editor.putString("SAVED_LIST_${shoppingList.title}", jsonList)
         editor.apply()
     }
-
 
     // Método para agrupar itens por categoria
     private fun groupItems(items: List<Item>): Map<String, List<Item>> {

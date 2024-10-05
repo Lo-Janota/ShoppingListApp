@@ -1,9 +1,0 @@
-RF004 - Gestão de Itens da Lista
-    Preciso pesquisar por nome do item tambem (junto com o nome da lista)
-
-5 - Requisitos Nao Funcionais
-    Deve haver tratamento para que não haja perda de dados com mudanças de configurações do dispositivo (por exemplo, rotação de tela).
-    Deve-se utilizar o recurso de vinculação de visualizações (ViewBinding).
-
-
-

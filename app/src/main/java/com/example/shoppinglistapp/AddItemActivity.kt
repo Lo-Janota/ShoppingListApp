@@ -1,4 +1,3 @@
-// AddItemActivity.kt
 package com.example.shoppinglistapp
 
 import Item
@@ -10,19 +9,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
 import android.widget.ImageView
-import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.example.shoppinglistapp.databinding.ActivityAddItemBinding
 
 class AddItemActivity : AppCompatActivity() {
 
-    private lateinit var nameEditText: EditText
-    private lateinit var quantityEditText: EditText
-    private lateinit var unitEditText: EditText
-    private lateinit var categoryIcon: ImageView
+    private lateinit var binding: ActivityAddItemBinding
     private var selectedCategory: String = "Categoria Desconhecida" // Inicializando com uma categoria padrão
 
     companion object {
@@ -32,16 +26,11 @@ class AddItemActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_item)
-
-        nameEditText = findViewById(R.id.edit_item_name)
-        quantityEditText = findViewById(R.id.edit_item_quantity)
-        unitEditText = findViewById(R.id.edit_item_unit)
-        categoryIcon = findViewById(R.id.item_category_icon)
-        val categorySpinner = findViewById<Spinner>(R.id.category_spinner)
+        binding = ActivityAddItemBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val categories = listOf("Alimentos", "Frutas/Verduras/Legumes", "Carnes", "Bebidas", "Frios", "Padaria", "Higiene", "Limpeza", "Outros")
-        val icons = listOf(R.drawable.ic_alimentos,R.drawable.ic_frutas, R.drawable.ic_carnes, R.drawable.ic_bebidas, R.drawable.ic_frios, R.drawable.ic_padaria, R.drawable.ic_higiene, R.drawable.ic_limpeza, R.drawable.ic_default_category)
+        val icons = listOf(R.drawable.ic_alimentos, R.drawable.ic_frutas, R.drawable.ic_carnes, R.drawable.ic_bebidas, R.drawable.ic_frios, R.drawable.ic_padaria, R.drawable.ic_higiene, R.drawable.ic_limpeza, R.drawable.ic_default_category)
 
         val adapter = object : ArrayAdapter<String>(this, R.layout.spinner_item, categories) {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -62,33 +51,32 @@ class AddItemActivity : AppCompatActivity() {
                 return getView(position, convertView, parent)
             }
         }
-        categorySpinner.adapter = adapter
+        binding.categorySpinner.adapter = adapter
 
         // Defina o que acontece quando a categoria é selecionada
-        categorySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.categorySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 selectedCategory = categories[position] // Armazena a categoria selecionada
-                categoryIcon.setImageResource(icons[position]) // Muda o ícone da categoria
+                binding.itemCategoryIcon.setImageResource(icons[position]) // Muda o ícone da categoria
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
-                // Você pode deixar vazio ou definir um comportamento padrão
+
             }
         }
 
         // Botão de salvar o item
-        val saveButton = findViewById<Button>(R.id.btn_save_item)
-        saveButton.setOnClickListener {
-            val itemName = nameEditText.text.toString()
-            val itemQuantity = quantityEditText.text.toString().toIntOrNull() ?: 1
-            val itemUnit = unitEditText.text.toString()
+        binding.btnSaveItem.setOnClickListener {
+            val itemName = binding.editItemName.text.toString()
+            val itemQuantity = binding.editItemQuantity.text.toString().toIntOrNull() ?: 1
+            val itemUnit = binding.editItemUnit.text.toString()
 
             // Criar um novo item
             val newItem = Item(
                 name = itemName,
                 quantity = itemQuantity,
                 unit = itemUnit,
-                category = selectedCategory, // Use o nome da categoria
+                category = selectedCategory,
                 isPurchased = false
             )
             shoppingList.add(newItem) // Adicione o item na lista de compras
@@ -99,11 +87,8 @@ class AddItemActivity : AppCompatActivity() {
             finish() // Fecha a Activity
         }
 
-        val cancelButton = findViewById<Button>(R.id.btn_cancel)
-        cancelButton.setOnClickListener {
+        binding.btnCancel.setOnClickListener {
             finish()
         }
     }
-
-
 }

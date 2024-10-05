@@ -1,5 +1,6 @@
 package com.example.shoppinglistapp
 
+import Item
 import ShoppingListAdapter
 import android.content.Intent
 import android.net.Uri
@@ -11,21 +12,23 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.appcompat.app.AlertDialog
+import com.example.shoppinglistapp.databinding.ActivityHomeBinding
 
 class HomeActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityHomeBinding
     private lateinit var adapter: ShoppingListAdapter
     private val shoppingLists = mutableListOf<ShoppingList>() // Lista de compras original
     private val filteredLists = mutableListOf<ShoppingList>() // Lista de compras filtrada
-    private lateinit var searchEditText: EditText // Campo de pesquisa
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
+        binding = ActivityHomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // Inicializando os componentes
-        searchEditText = findViewById(R.id.search_edit_text) // EditText para o campo de pesquisa
-        val recyclerView = findViewById<RecyclerView>(R.id.recycler_view_lists)
+        val recyclerView = binding.recyclerViewLists
+        binding.searchEditText // EditText para o campo de pesquisa
         recyclerView.layoutManager = GridLayoutManager(this, 2) // 2 colunas
 
         // Inicializando o adapter com as listas filtradas
@@ -33,9 +36,9 @@ class HomeActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
 
         // Encontrar os botões
-        val fabAddList = findViewById<FloatingActionButton>(R.id.fab_add_list)
-        val fabLogout = findViewById<FloatingActionButton>(R.id.fab_logout)
-        val fabSearch = findViewById<FloatingActionButton>(R.id.fab_search)
+        val fabAddList = binding.fabAddList
+        val fabLogout = binding.fabLogout
+        val fabSearch = binding.fabSearch
 
         fabLogout.setOnClickListener {
             Toast.makeText(this, "Saindo...", Toast.LENGTH_SHORT).show()
@@ -45,7 +48,7 @@ class HomeActivity : AppCompatActivity() {
 
         // Implementação da funcionalidade de busca
         fabSearch.setOnClickListener {
-            val query = searchEditText.text.toString().trim() // Obter o texto de pesquisa
+            val query = binding.searchEditText.text.toString().trim() // Obter o texto de pesquisa
             searchShoppingLists(query)
         }
 
@@ -89,8 +92,7 @@ class HomeActivity : AppCompatActivity() {
             alertDialog.show()
         }
 
-        adapter.setOnViewListClickListener {
-                position ->
+        adapter.setOnViewListClickListener { position ->
             // Pegue a lista de compras selecionada
             val selectedList = shoppingLists[position]
 

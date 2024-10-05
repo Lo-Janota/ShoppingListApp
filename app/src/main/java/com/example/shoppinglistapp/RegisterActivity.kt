@@ -1,6 +1,6 @@
+// RegisterActivity.kt
 package com.example.shoppinglistapp
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -8,60 +8,77 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 
 class RegisterActivity : AppCompatActivity() {
 
-    @SuppressLint("MissingInflatedId")
+    private lateinit var nameInput: EditText
+    private lateinit var emailInput: EditText
+    private lateinit var passwordInput: EditText
+    private lateinit var confirmPasswordInput: EditText
+    private lateinit var btnRegister: Button
+    private lateinit var btnVoltar: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        val name = findViewById<EditText>(R.id.name)
-        val email = findViewById<EditText>(R.id.email)
-        val password = findViewById<EditText>(R.id.password)
-        val confirmPassword = findViewById<EditText>(R.id.confirm_password)
-        val btnRegister = findViewById<Button>(R.id.btn_register)
-        val btnVoltar = findViewById<Button>(R.id.btn_voltar)
+        initializeViews()
+        setupListeners()
+    }
 
-        btnRegister.setOnClickListener {
-            val nameInput = name.text.toString()
-            val emailInput = email.text.toString()
-            val passwordInput = password.text.toString()
-            val confirmPasswordInput = confirmPassword.text.toString()
+    private fun initializeViews() {
+        nameInput = findViewById(R.id.name)
+        emailInput = findViewById(R.id.email)
+        passwordInput = findViewById(R.id.password)
+        confirmPasswordInput = findViewById(R.id.confirm_password)
+        btnRegister = findViewById(R.id.btn_register)
+        btnVoltar = findViewById(R.id.btn_voltar)
+    }
 
-            // Verificação se todos os campos estão preenchidos
-            if (nameInput.isEmpty() || emailInput.isEmpty() || passwordInput.isEmpty() || confirmPasswordInput.isEmpty()) {
-                Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
+    private fun setupListeners() {
+        btnRegister.setOnClickListener { handleRegister() }
+        btnVoltar.setOnClickListener { navigateToLogin() }
+    }
 
-            // Verificação se a senha e a confirmação de senha são iguais
-            if (passwordInput != confirmPasswordInput) {
-                Toast.makeText(this, "Senhas não coincidem", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
+    private fun handleRegister() {
+        val name = nameInput.text.toString()
+        val email = emailInput.text.toString()
+        val password = passwordInput.text.toString()
+        val confirmPassword = confirmPasswordInput.text.toString()
 
-            // Salvando os dados do usuário no SharedPreferences
-            val sharedPreferences = getSharedPreferences("USER_DATA", Context.MODE_PRIVATE)
-            val editor = sharedPreferences.edit()
-            editor.putString("USER_EMAIL", emailInput)
-            editor.putString("USER_PASSWORD", passwordInput)
-            editor.apply()
-
-            // Exibir mensagem de sucesso
+        if (areFieldsValid(name, email, password, confirmPassword)) {
+            saveUserData(email, password)
             Toast.makeText(this, "Usuário registrado com sucesso!", Toast.LENGTH_SHORT).show()
-
-            // Navega para a tela de Login após o registro
-            val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
+    }
 
-        btnVoltar.setOnClickListener {
-            Toast.makeText(this, "Voltando para a tela de login", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
-            startActivity(intent)
+    private fun areFieldsValid(name: String, email: String, password: String, confirmPassword: String): Boolean {
+        return when {
+            name.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() -> {
+                Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show()
+                false
+            }
+            password != confirmPassword -> {
+                Toast.makeText(this, "Senhas não coincidem", Toast.LENGTH_SHORT).show()
+                false
+            }
+            else -> true
         }
+    }
+
+    private fun saveUserData(email: String, password: String) {
+        val sharedPreferences = getSharedPreferences("USER_DATA", Context.MODE_PRIVATE)
+        with(sharedPreferences.edit()) {
+            putString("USER_EMAIL", email)
+            putString("USER_PASSWORD", password)
+            apply()
+        }
+    }
+
+    private fun navigateToLogin() {
+        Toast.makeText(this, "Voltando para a tela de login", Toast.LENGTH_SHORT).show()
+        startActivity(Intent(this, LoginActivity::class.java))
     }
 }

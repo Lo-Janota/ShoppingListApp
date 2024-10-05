@@ -1,3 +1,4 @@
+// LoginActivity.kt
 package com.example.shoppinglistapp
 
 import android.content.Context
@@ -10,51 +11,66 @@ import androidx.appcompat.app.AppCompatActivity
 
 class LoginActivity : AppCompatActivity() {
 
+    private lateinit var emailInput: EditText
+    private lateinit var passwordInput: EditText
+    private lateinit var btnLogin: Button
+    private lateinit var btnRegister: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        val email = findViewById<EditText>(R.id.email)
-        val password = findViewById<EditText>(R.id.password)
-        val btnLogin = findViewById<Button>(R.id.btn_login)
-        val btnRegister = findViewById<Button>(R.id.btn_register)
+        initializeViews()
+        setupListeners()
+    }
 
-        btnLogin.setOnClickListener {
-            val emailInput = email.text.toString()
-            val passwordInput = password.text.toString()
+    private fun initializeViews() {
+        emailInput = findViewById(R.id.email)
+        passwordInput = findViewById(R.id.password)
+        btnLogin = findViewById(R.id.btn_login)
+        btnRegister = findViewById(R.id.btn_register)
+    }
 
-            // Verifica se o campo de email está preenchido e válido
-            if (emailInput.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(emailInput).matches()) {
-                email.error = "Email inválido!"
-                return@setOnClickListener
-            }
+    private fun setupListeners() {
+        btnLogin.setOnClickListener { handleLogin() }
+        btnRegister.setOnClickListener { navigateToRegister() }
+    }
 
-            // Verifica se o campo de senha está preenchido
-            if (passwordInput.isEmpty()) {
-                password.error = "Campo obrigatório!"
-                return@setOnClickListener
-            }
+    private fun handleLogin() {
+        val email = emailInput.text.toString()
+        val password = passwordInput.text.toString()
 
-            // Verifica se o usuário já está registrado no SharedPreferences
-            val sharedPreferences = getSharedPreferences("USER_DATA", Context.MODE_PRIVATE)
-            val savedEmail = sharedPreferences.getString("USER_EMAIL", "")
-            val savedPassword = sharedPreferences.getString("USER_PASSWORD", "")
-
-            // Verifica se o email e senha estão corretos
-            if (emailInput == savedEmail && passwordInput == savedPassword) {
-                Toast.makeText(this, "Login efetuado com sucesso...", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this@LoginActivity, HomeActivity::class.java)
-                startActivity(intent)
-                finish() // Fecha a tela de login
-            } else {
-                // Exibe uma mensagem de erro se as credenciais não estiverem corretas
-                Toast.makeText(this, "Email ou senha incorretos", Toast.LENGTH_SHORT).show()
-            }
+        if (!isValidEmail(email)) {
+            emailInput.error = "Email inválido!"
+            return
         }
 
-        btnRegister.setOnClickListener {
-            val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
-            startActivity(intent)
+        if (password.isEmpty()) {
+            passwordInput.error = "Campo obrigatório!"
+            return
         }
+
+        if (areCredentialsValid(email, password)) {
+            Toast.makeText(this, "Login efetuado com sucesso...", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, HomeActivity::class.java))
+            finish()
+        } else {
+            Toast.makeText(this, "Email ou senha incorretos", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun isValidEmail(email: String): Boolean {
+        return email.isNotEmpty() && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
+
+    private fun areCredentialsValid(email: String, password: String): Boolean {
+        val sharedPreferences = getSharedPreferences("USER_DATA", Context.MODE_PRIVATE)
+        val savedEmail = sharedPreferences.getString("USER_EMAIL", "")
+        val savedPassword = sharedPreferences.getString("USER_PASSWORD", "")
+        return email == savedEmail && password == savedPassword
+    }
+
+    private fun navigateToRegister() {
+        startActivity(Intent(this, RegisterActivity::class.java))
     }
 }

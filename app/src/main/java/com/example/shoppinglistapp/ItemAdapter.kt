@@ -14,6 +14,18 @@ class ItemAdapter(private var groupedItems: Map<String, List<Item>>) : RecyclerV
 
     private var selectedItemPosition: Int = -1
 
+    private val categoryIcons = mapOf(
+        "Alimentos" to R.drawable.ic_alimentos,
+        "Frutas/Verduras/Legumes" to R.drawable.ic_frutas,
+        "Carnes" to R.drawable.ic_carnes,
+        "Bebidas" to R.drawable.ic_bebidas,
+        "Frios" to R.drawable.ic_frios,
+        "Padaria" to R.drawable.ic_padaria,
+        "Higiene" to R.drawable.ic_higiene,
+        "Limpeza" to R.drawable.ic_limpeza,
+        "Outros" to R.drawable.ic_default_category
+    )
+
     inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val categoryIcon: ImageView = itemView.findViewById(R.id.item_category_icon)
         val itemName: TextView = itemView.findViewById(R.id.item_name)
@@ -23,29 +35,17 @@ class ItemAdapter(private var groupedItems: Map<String, List<Item>>) : RecyclerV
 
         init {
             itemPurchasedCheckBox.setOnCheckedChangeListener { _, isChecked ->
-                // Tente atualizar o item e notifique a mudança
-                try {
-                    val item = getItem(adapterPosition)
-                    item?.let {
-                        it.isPurchased = isChecked
-
-                        // Atualizar a lista
-                        val newGroupedItems = groupedItems.toMutableMap()
-                        newGroupedItems[it.category] = newGroupedItems[it.category]?.map { existingItem ->
-                            if (existingItem == it) it else existingItem
-                        } ?: listOf(it)
-
-                        updateItems(newGroupedItems)
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace() // Log de erro
+                val item = getItem(adapterPosition)
+                item?.let {
+                    it.isPurchased = isChecked
+                    updateItems(groupedItems) // Atualiza apenas o estado do item
                 }
             }
 
             itemView.setOnClickListener {
                 if (selectedItemPosition != adapterPosition) {
                     selectedItemPosition = adapterPosition
-                    notifyDataSetChanged() // Notifica que os dados mudaram
+                    notifyDataSetChanged()
                 }
             }
         }
@@ -73,28 +73,12 @@ class ItemAdapter(private var groupedItems: Map<String, List<Item>>) : RecyclerV
         holder.itemName.text = currentItem.name
         holder.itemQuantity.text = currentItem.quantity.toString()
         holder.itemUnit.text = currentItem.unit
-        holder.itemPurchasedCheckBox.isChecked = currentItem.isPurchased // Setando estado do checkbox
+        holder.itemPurchasedCheckBox.isChecked = currentItem.isPurchased
 
-        // Definir ícone de categoria
-        when (currentItem.category) {
-            "Alimentos" -> holder.categoryIcon.setImageResource(R.drawable.ic_alimentos)
-            "Frutas/Verduras/Legumes" -> holder.categoryIcon.setImageResource(R.drawable.ic_frutas)
-            "Carnes" -> holder.categoryIcon.setImageResource(R.drawable.ic_carnes)
-            "Bebidas" -> holder.categoryIcon.setImageResource(R.drawable.ic_bebidas)
-            "Frios" -> holder.categoryIcon.setImageResource(R.drawable.ic_frios)
-            "Padaria" -> holder.categoryIcon.setImageResource(R.drawable.ic_padaria)
-            "Higiene" -> holder.categoryIcon.setImageResource(R.drawable.ic_higiene)
-            "Limpeza" -> holder.categoryIcon.setImageResource(R.drawable.ic_limpeza)
-            "Outros" -> holder.categoryIcon.setImageResource(R.drawable.ic_default_category)
-            else -> holder.categoryIcon.setImageResource(R.drawable.ic_default_category)
-        }
+        holder.categoryIcon.setImageResource(categoryIcons[currentItem.category] ?: R.drawable.ic_default_category)
 
         // Marcar o item selecionado
-        if (selectedItemPosition == position) {
-            holder.itemView.setBackgroundColor(Color.LTGRAY) // Altere a cor ou estilo conforme desejado
-        } else {
-            holder.itemView.setBackgroundColor(Color.WHITE)
-        }
+        holder.itemView.setBackgroundColor(if (selectedItemPosition == position) Color.LTGRAY else Color.WHITE)
     }
 
     private fun getItemsSeparated(): Pair<List<Item>, List<Item>> {
@@ -132,7 +116,7 @@ class ItemAdapter(private var groupedItems: Map<String, List<Item>>) : RecyclerV
 
     fun updateItems(newItems: Map<String, List<Item>>) {
         groupedItems = newItems
-        notifyDataSetChanged() // Notifica que os dados mudaram
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {
